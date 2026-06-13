@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Madrasat Ash-Sheikh</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0B3D2E;
+            --primary-light: #145A42;
+            --accent: #C9A84C;
+            --bg-cream: #F5F0E8;
+            --bg-light: #FAF8F3;
+            --text-dark: #1A1A1A;
+            --text-body: #4A4A4A;
+            --text-muted: #7A7A7A;
+            --white: #FFFFFF;
+            --border: #E8E2D6;
+            --shadow: 0 4px 24px rgba(11, 61, 46, 0.08);
+            --danger: #dc3545;
+            --success: #28a745;
+            --info: #17a2b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-cream);
+            color: var(--text-body);
+            line-height: 1.6;
+        }
+
+        .login-screen {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .login-box {
+            background: var(--white);
+            padding: 48px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .login-box .logo-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-size: 1.8rem;
+            margin: 0 auto 24px;
+        }
+
+        .login-box h1 {
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-size: 1.5rem;
+        }
+
+        .login-box p {
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            font-size: 0.9rem;
+        }
+
+        .login-box .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .login-box .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .login-box .form-group input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .login-box .form-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .login-error {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-top: 12px;
+            display: none;
+            align-items: center;
+            gap: 6px;
+            justify-content: center;
+        }
+
+        .login-error.show {
+            display: flex;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            display: none;
+        }
+
+        .admin-header {
+            background: var(--primary);
+            color: var(--white);
+            padding: 32px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .admin-header h1 {
+            color: var(--white);
+            font-size: 1.5rem;
+        }
+
+        .admin-header p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: #D4B76A;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-info {
+            background: var(--info);
+            color: var(--white);
+        }
+
+        .btn-sm {
+            padding: 6px 16px;
+            font-size: 0.8rem;
+        }
+
+        .admin-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .admin-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .card h2 {
+            font-size: 1.1rem;
+            margin-bottom: 24px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            background: var(--bg-light);
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: var(--white);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group small {
+            display: block;
+            margin-top: 6px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .image-upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: var(--bg-light);
+            position: relative;
+        }
+
+        .image-upload-area:hover {
+            border-color: var(--accent);
+            background: rgba(201, 168, 76, 0.05);
+        }
+
+        .image-upload-area i {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        .image-upload-area p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .image-preview {
+            width: 100%;
+            max-width: 200px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .image-preview.show {
+            display: block;
+        }
+
+        .gallery-manager {
+            margin-top: 16px;
+        }
+
+        .gallery-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .gallery-thumb {
+            aspect-ratio: 1;
+            background: var(--bg-light);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gallery-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-thumb .remove {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 24px;
+            height: 24px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .add-image {
+            aspect-ratio: 1;
+            background: var(--primary);
+            color: var(--accent);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px dashed var(--accent);
+            transition: all 0.3s;
+        }
+
+        .add-image:hover {
+            background: var(--primary-light);
+        }
+
+        .add-image i {
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+        }
+
+        .add-image span {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .preview-section {
+            margin-top: 32px;
+            background: var(--white);
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid var(--border);
+        }
+
+        .preview-section h2 {
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            color: var(--primary);
+        }
+
+        .preview-frame {
+            width: 100%;
+            height: 500px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            background: var(--bg-cream);
+        }
+
+        .alert {
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 24px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert.show {
+            display: flex;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-box {
+            background: var(--white);
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .stat-box i {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .stat-box h3 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .stat-box p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .list-item {
+            background: var(--bg-light);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .list-item img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: var(--primary);
+        }
+
+        .list-item .list-info {
+            flex: 1;
+        }
+
+        .list-item .list-info h4 {
+            font-size: 1rem;
+            margin-bottom: 2px;
+            color: var(--text-dark);
+        }
+
+        .list-item .list-info p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .list-item .list-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 32px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-header h3 {
+            color: var(--primary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .upload-progress {
+            width: 100%;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-top: 12px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .upload-progress.show {
+            display: block;
+        }
+
+        .upload-progress-bar {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 640px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .login-box {
+                padding: 32px 24px;
+                margin: 16px;
+            }
+
+            .admin-header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            background: var(--bg-light);
+            color: var(--text-body);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: var(--white);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            color: var(--border);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-box">
+            <div class="logo-icon"><i class="fas fa-lock"></i></div>
+            <h1>Admin Login</h1>
+            <p>Madrasat Ash-Sheikh Abdul Qadir Bin Bushairi Adun</p>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPassword" placeholder="Enter admin password" onkeypress="if(event.key==='Enter')doLogin()">
+            </div>
+            <button class="btn btn-primary" style="width:100%" onclick="doLogin()"><i class="fas fa-sign-in-alt"></i> Login</button>
+            <div class="login-error" id="loginError"><i class="fas fa-exclamation-circle"></i> Incorrect password. Please try again.</div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div class="admin-container" id="adminContainer">
+        <div class="alert alert-success" id="alertSuccess"><i class="fas fa-check-circle"></i> <span id="successMsg">Changes saved successfully!</span></div>
+        <div class="alert alert-error" id="alertError"><i class="fas fa-exclamation-circle"></i> <span id="errorMsg">An error occurred.</span></div>
+
+        <div class="admin-header">
+            <div>
+                <h1><i class="fas fa-cog"></i> Admin Panel</h1>
+                <p>Manage your school website content</p>
+            </div>
+            <div style="display:flex;gap:12px;">
+                <button class="btn btn-secondary" onclick="previewSite()"><i class="fas fa-eye"></i> Preview</button>
+                <button class="btn btn-danger" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-box">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <h3 id="statTeachers">0</h3>
+                <p>Teachers</p>
+            </div>
+            <div class="stat-box">
+                <i class="fas fa-user-graduate"></i>
+                <h3 id="statStudents">0</h3>
+                <p>Students</p>
+            </div>
+            <div class="stat-box">
+                <i class="fas fa-images"></i>
+                <h3 id="statGallery">0</h3>
+                <p>Gallery</p>
+            </div>
+            <div class="stat-box">
+                <i class="fas fa-calendar"></i>
+                <h3 id="statUpdated">Now</h3>
+                <p>Last Updated</p>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('general')" data-tab="general"><i class="fas fa-school"></i> General</button>
+            <button class="tab-btn" onclick="switchTab('teachers')" data-tab="teachers"><i class="fas fa-chalkboard-teacher"></i> Teachers</button>
+            <button class="tab-btn" onclick="switchTab('students')" data-tab="students"><i class="fas fa-user-graduate"></i> Students</button>
+            <button class="tab-btn" onclick="switchTab('gallery')" data-tab="gallery"><i class="fas fa-images"></i> Gallery</button>
+        </div>
+
+        <!-- General Settings Tab -->
+        <div class="tab-content active" id="tab-general">
+            <div class="admin-grid">
+                <div class="card">
+                    <h2><i class="fas fa-info-circle"></i> School Information</h2>
+                    <div class="form-group">
+                        <label>School Name</label>
+                        <input type="text" id="schoolName" placeholder="Madrasat Ash-Sheikh">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="text" id="phone" placeholder="09025213498">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="email" placeholder="enywise652@gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Location</label>
+                        <input type="text" id="location" placeholder="Ajibesin, Ogidi, Ilorin, Kwara State, Nigeria">
+                    </div>
+                    <div class="form-group">
+                        <label>Footer Credit</label>
+                        <input type="text" id="footerCredit" placeholder="Editor by eny_wise 09025213498">
+                    </div>
+                    <button class="btn btn-primary" onclick="saveGeneral()"><i class="fas fa-save"></i> Save Changes</button>
+                </div>
+
+                <div class="card">
+                    <h2><i class="fas fa-heading"></i> Hero Section</h2>
+                    <div class="form-group">
+                        <label>Hero Title (HTML allowed)</label>
+                        <textarea id="heroTitle" placeholder="Learn <span class='highlight'>Qur'an</span><br>& Islam <em>the authentic way</em>"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Arabic Title</label>
+                        <input type="text" id="heroArabic" placeholder="مدرسة الشيخ عبد القادر بن بوصيري أدون للتعليم العربي والإسلامي">
+                    </div>
+                    <div class="form-group">
+                        <label>Hero Description</label>
+                        <textarea id="heroDesc" placeholder="Combining traditional Madrasah scholarship with modern E-Learning..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>About Text (HTML allowed)</label>
+                        <textarea id="aboutText" placeholder="<strong>Madrasat Ash-Sheikh...</strong>"></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveGeneral()"><i class="fas fa-save"></i> Save Changes</button>
+                </div>
+
+                <div class="card full-width">
+                    <h2><i class="fas fa-image"></i> School Logo</h2>
+                    <div class="image-upload-area" onclick="document.getElementById('logoInput').click()">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Click to upload logo image</p>
+                        <small>Recommended: 200x200px, PNG or JPG</small>
+                        <img id="logoPreview" class="image-preview" alt="Logo preview">
+                        <div class="upload-progress" id="logoProgress">
+                            <div class="upload-progress-bar" id="logoProgressBar"></div>
+                        </div>
+                    </div>
+                    <input type="file" id="logoInput" accept="image/*" onchange="handleLogoUpload(this)">
+                    <div style="margin-top:12px;">
+                        <button class="btn btn-danger btn-sm" onclick="removeLogo()" id="removeLogoBtn" style="display:none;"><i class="fas fa-trash"></i> Remove Logo</button>
+                    </div>
+                </div>
+
+                <div class="card full-width">
+                    <h2><i class="fas fa-share-alt"></i> Social Media Links</h2>
+                    <div class="admin-grid">
+                        <div class="form-group">
+                            <label>Facebook URL</label>
+                            <input type="url" id="facebook" placeholder="https://facebook.com/...">
+                        </div>
+                        <div class="form-group">
+                            <label>Instagram URL</label>
+                            <input type="url" id="instagram" placeholder="https://instagram.com/...">
+                        </div>
+                        <div class="form-group">
+                            <label>YouTube URL</label>
+                            <input type="url" id="youtube" placeholder="https://youtube.com/...">
+                        </div>
+                        <div class="form-group">
+                            <label>WhatsApp URL</label>
+                            <input type="url" id="whatsapp" placeholder="https://wa.me/...">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveGeneral()"><i class="fas fa-save"></i> Save Changes</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teachers Tab -->
+        <div class="tab-content" id="tab-teachers">
+            <div class="card">
+                <h2><i class="fas fa-plus-circle"></i> Add New Teacher</h2>
+                <div class="admin-grid">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="teacherName" placeholder="Sheikh Abdul Qadir">
+                    </div>
+                    <div class="form-group">
+                        <label>Subject / Role</label>
+                        <input type="text" id="teacherSubject" placeholder="Founder & Lead Instructor">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="teacherDesc" placeholder="Brief bio..."></textarea>
+                </div>
+                <div class="image-upload-area" onclick="document.getElementById('teacherImageInput').click()">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Click to upload teacher photo</p>
+                    <img id="teacherImagePreview" class="image-preview" alt="Teacher preview">
+                    <div class="upload-progress" id="teacherProgress">
+                        <div class="upload-progress-bar" id="teacherProgressBar"></div>
+                    </div>
+                </div>
+                <input type="file" id="teacherImageInput" accept="image/*" onchange="handleTeacherImageUpload(this)">
+                <div style="margin-top:16px;">
+                    <button class="btn btn-primary" onclick="addTeacher()"><i class="fas fa-plus"></i> Add Teacher</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-list"></i> Teachers List</h2>
+                <div id="teachersList">
+                    <div class="empty-state">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <p>No teachers added yet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Students Tab -->
+        <div class="tab-content" id="tab-students">
+            <div class="card">
+                <h2><i class="fas fa-plus-circle"></i> Add New Student</h2>
+                <div class="admin-grid">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="studentName" placeholder="Ahmad">
+                    </div>
+                    <div class="form-group">
+                        <label>Class / Level</label>
+                        <input type="text" id="studentClass" placeholder="Beginner">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Additional Info</label>
+                    <input type="text" id="studentInfo" placeholder="Age, achievements, etc.">
+                </div>
+                <div class="image-upload-area" onclick="document.getElementById('studentImageInput').click()">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Click to upload student photo</p>
+                    <img id="studentImagePreview" class="image-preview" alt="Student preview">
+                    <div class="upload-progress" id="studentProgress">
+                        <div class="upload-progress-bar" id="studentProgressBar"></div>
+                    </div>
+                </div>
+                <input type="file" id="studentImageInput" accept="image/*" onchange="handleStudentImageUpload(this)">
+                <div style="margin-top:16px;">
+                    <button class="btn btn-primary" onclick="addStudent()"><i class="fas fa-plus"></i> Add Student</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-list"></i> Students List</h2>
+                <div id="studentsList">
+                    <div class="empty-state">
+                        <i class="fas fa-user-graduate"></i>
+                        <p>No students added yet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gallery Tab -->
+        <div class="tab-content" id="tab-gallery">
+            <div class="card">
+                <h2><i class="fas fa-images"></i> Gallery Manager</h2>
+                <div class="image-upload-area" onclick="document.getElementById('galleryInput').click()">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Click to upload gallery images</p>
+                    <small>You can select multiple images</small>
+                    <div class="upload-progress" id="galleryProgress">
+                        <div class="upload-progress-bar" id="galleryProgressBar"></div>
+                    </div>
+                </div>
+                <input type="file" id="galleryInput" accept="image/*" multiple onchange="handleGalleryUpload(this)">
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-th"></i> Gallery Images</h2>
+                <div class="gallery-list" id="galleryList">
+                    <div class="add-image" onclick="document.getElementById('galleryInput').click()">
+                        <i class="fas fa-plus"></i>
+                        <span>Add Images</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preview Section -->
+        <div class="preview-section" id="previewSection" style="display:none;">
+            <h2><i class="fas fa-eye"></i> Live Preview</h2>
+            <iframe class="preview-frame" id="previewFrame" src="index.html"></iframe>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Edit</h3>
+                <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="modalBody">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cloudinary Config
+        const CLOUDINARY_CLOUD_NAME = 'dd7rgez1e';
+        const CLOUDINARY_UPLOAD_PRESET = 'my_school_app';
+        const ADMIN_PASSWORD = 'Adun@12';
+
+        // State
+        let schoolData = {
+            schoolName: 'Madrasat Ash-Sheikh',
+            phone: '09025213498',
+            email: 'enywise652@gmail.com',
+            location: 'Ajibesin, Ogidi, Ilorin, Kwara State, Nigeria',
+            heroTitle: "Learn <span class='highlight'>Qur'an</span><br>& Islam <em>the authentic way</em>",
+            heroArabic: 'مدرسة الشيخ عبد القادر بن بوصيري أدون للتعليم العربي والإسلامي',
+            heroDesc: 'Combining traditional Madrasah scholarship with modern E-Learning — bringing certified Qur\'anic education to every home, worldwide.',
+            aboutText: '<strong>Madrasat Ash-Sheikh Abdul Qadir Bin Bushairi Adun</strong> is a dedicated Islamic educational institute committed to delivering authentic, structured Islamic education to students worldwide. We bridge the gap between traditional Madrasah scholarship and the convenience of modern technology.',
+            footerCredit: 'Editor by eny_wise 09025213498',
+            logo: '',
+            facebook: '',
+            instagram: '',
+            youtube: '',
+            whatsapp: 'https://wa.me/2349025213498',
+            teachers: [],
+            students: [],
+            galleryImages: []
+        };
+
+        let currentTeacherImage = '';
+        let currentStudentImage = '';
+        let editingTeacherIndex = -1;
+        let editingStudentIndex = -1;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            checkLogin();
+        });
+
+        // Login System
+        function checkLogin() {
+            const isLoggedIn = sessionStorage.getItem('adminLoggedIn');
+            if (isLoggedIn === 'true') {
+                showDashboard();
+            }
+        }
+
+        function doLogin() {
+            const password = document.getElementById('loginPassword').value;
+            if (password === ADMIN_PASSWORD) {
+                sessionStorage.setItem('adminLoggedIn', 'true');
+                showDashboard();
+            } else {
+                document.getElementById('loginError').classList.add('show');
+                document.getElementById('loginPassword').value = '';
+            }
+        }
+
+        function doLogout() {
+            sessionStorage.removeItem('adminLoggedIn');
+            location.reload();
+        }
+
+        function showDashboard() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('adminContainer').style.display = 'block';
+            populateFields();
+            updateStats();
+            renderTeachersList();
+            renderStudentsList();
+            renderGalleryList();
+        }
+
+        // Data Management
+        function loadData() {
+            const stored = localStorage.getItem('schoolData');
+            if (stored) {
+                try {
+                    const parsed = JSON.parse(stored);
+                    schoolData = { ...schoolData, ...parsed };
+                } catch (e) {
+                    console.error('Error parsing stored data:', e);
+                }
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('schoolData', JSON.stringify(schoolData));
+            updateStats();
+            showAlert('success', 'Changes saved successfully!');
+        }
+
+        function populateFields() {
+            document.getElementById('schoolName').value = schoolData.schoolName || '';
+            document.getElementById('phone').value = schoolData.phone || '';
+            document.getElementById('email').value = schoolData.email || '';
+            document.getElementById('location').value = schoolData.location || '';
+            document.getElementById('footerCredit').value = schoolData.footerCredit || '';
+            document.getElementById('heroTitle').value = schoolData.heroTitle || '';
+            document.getElementById('heroArabic').value = schoolData.heroArabic || '';
+            document.getElementById('heroDesc').value = schoolData.heroDesc || '';
+            document.getElementById('aboutText').value = schoolData.aboutText || '';
+            document.getElementById('facebook').value = schoolData.facebook || '';
+            document.getElementById('instagram').value = schoolData.instagram || '';
+            document.getElementById('youtube').value = schoolData.youtube || '';
+            document.getElementById('whatsapp').value = schoolData.whatsapp || '';
+
+            if (schoolData.logo) {
+                document.getElementById('logoPreview').src = schoolData.logo;
+                document.getElementById('logoPreview').classList.add('show');
+                document.getElementById('removeLogoBtn').style.display = 'inline-flex';
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('statTeachers').textContent = schoolData.teachers ? schoolData.teachers.length : 0;
+            document.getElementById('statStudents').textContent = schoolData.students ? schoolData.students.length : 0;
+            document.getElementById('statGallery').textContent = schoolData.galleryImages ? schoolData.galleryImages.length : 0;
+            document.getElementById('statUpdated').textContent = new Date().toLocaleTimeString();
+        }
+
+        // Cloudinary Upload
+        async function uploadToCloudinary(file, progressBarId) {
+            return new Promise(async (resolve, reject) => {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+                try {
+                    const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) throw new Error('Upload failed');
+
+                    const data = await response.json();
+                    resolve(data.secure_url);
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        }
+
+        // General Settings
+        function saveGeneral() {
+            schoolData.schoolName = document.getElementById('schoolName').value;
+            schoolData.phone = document.getElementById('phone').value;
+            schoolData.email = document.getElementById('email').value;
+            schoolData.location = document.getElementById('location').value;
+            schoolData.footerCredit = document.getElementById('footerCredit').value;
+            schoolData.heroTitle = document.getElementById('heroTitle').value;
+            schoolData.heroArabic = document.getElementById('heroArabic').value;
+            schoolData.heroDesc = document.getElementById('heroDesc').value;
+            schoolData.aboutText = document.getElementById('aboutText').value;
+            schoolData.facebook = document.getElementById('facebook').value;
+            schoolData.instagram = document.getElementById('instagram').value;
+            schoolData.youtube = document.getElementById('youtube').value;
+            schoolData.whatsapp = document.getElementById('whatsapp').value;
+
+            saveData();
+        }
+
+        // Logo Management
+        async function handleLogoUpload(input) {
+            if (!input.files || !input.files[0]) return;
+
+            const file = input.files[0];
+            const progressBar = document.getElementById('logoProgressBar');
+            const progressContainer = document.getElementById('logoProgress');
+            const preview = document.getElementById('logoPreview');
+
+            progressContainer.classList.add('show');
+            progressBar.style.width = '50%';
+
+            try {
+                const url = await uploadToCloudinary(file);
+                schoolData.logo = url;
+                preview.src = url;
+                preview.classList.add('show');
+                document.getElementById('removeLogoBtn').style.display = 'inline-flex';
+                progressBar.style.width = '100%';
+                saveData();
+
+                setTimeout(() => {
+                    progressContainer.classList.remove('show');
+                    progressBar.style.width = '0%';
+                }, 1000);
+            } catch (error) {
+                showAlert('error', 'Failed to upload logo. Please try again.');
+                progressContainer.classList.remove('show');
+            }
+        }
+
+        function removeLogo() {
+            schoolData.logo = '';
+            document.getElementById('logoPreview').classList.remove('show');
+            document.getElementById('logoPreview').src = '';
+            document.getElementById('removeLogoBtn').style.display = 'none';
+            saveData();
+        }
+
+        // Teacher Management
+        async function handleTeacherImageUpload(input) {
+            if (!input.files || !input.files[0]) return;
+
+            const file = input.files[0];
+            const progressBar = document.getElementById('teacherProgressBar');
+            const progressContainer = document.getElementById('teacherProgress');
+            const preview = document.getElementById('teacherImagePreview');
+
+            progressContainer.classList.add('show');
+            progressBar.style.width = '50%';
+
+            try {
+                const url = await uploadToCloudinary(file);
+                currentTeacherImage = url;
+                preview.src = url;
+                preview.classList.add('show');
+                progressBar.style.width = '100%';
+
+                setTimeout(() => {
+                    progressContainer.classList.remove('show');
+                    progressBar.style.width = '0%';
+                }, 1000);
+            } catch (error) {
+                showAlert('error', 'Failed to upload image. Please try again.');
+                progressContainer.classList.remove('show');
+            }
+        }
+
+        function addTeacher() {
+            const name = document.getElementById('teacherName').value.trim();
+            const subject = document.getElementById('teacherSubject').value.trim();
+            const desc = document.getElementById('teacherDesc').value.trim();
+
+            if (!name || !subject) {
+                showAlert('error', 'Name and subject are required.');
+                return;
+            }
+
+            const teacher = {
+                name: name,
+                subject: subject,
+                description: desc,
+                image: currentTeacherImage
+            };
+
+            if (editingTeacherIndex >= 0) {
+                schoolData.teachers[editingTeacherIndex] = teacher;
+                editingTeacherIndex = -1;
+            } else {
+                if (!schoolData.teachers) schoolData.teachers = [];
+                schoolData.teachers.push(teacher);
+            }
+
+            // Reset form
+            document.getElementById('teacherName').value = '';
+            document.getElementById('teacherSubject').value = '';
+            document.getElementById('teacherDesc').value = '';
+            document.getElementById('teacherImagePreview').classList.remove('show');
+            document.getElementById('teacherImagePreview').src = '';
+            currentTeacherImage = '';
+
+            saveData();
+            renderTeachersList();
+        }
+
+        function renderTeachersList() {
+            const container = document.getElementById('teachersList');
+            if (!schoolData.teachers || schoolData.teachers.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <p>No teachers added yet.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = schoolData.teachers.map((t, i) => `
+                <div class="list-item">
+                    <img src="${t.image || 'data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'60\' height=\'60\'><rect width=\'60\' height=\'60\' fill=\'%230B3D2E\'/></svg>'}" alt="${t.name}">
+                    <div class="list-info">
+                        <h4>${t.name}</h4>
+                        <p>${t.subject}</p>
+                    </div>
+                    <div class="list-actions">
+                        <button class="btn btn-info btn-sm" onclick="editTeacher(${i})"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteTeacher(${i})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editTeacher(index) {
+            const t = schoolData.teachers[index];
+            document.getElementById('teacherName').value = t.name;
+            document.getElementById('teacherSubject').value = t.subject;
+            document.getElementById('teacherDesc').value = t.description;
+            currentTeacherImage = t.image;
+
+            if (t.image) {
+                document.getElementById('teacherImagePreview').src = t.image;
+                document.getElementById('teacherImagePreview').classList.add('show');
+            }
+
+            editingTeacherIndex = index;
+            document.querySelector('[onclick="addTeacher()"]').innerHTML = '<i class="fas fa-save"></i> Update Teacher';
+        }
+
+        function deleteTeacher(index) {
+            if (confirm('Are you sure you want to delete this teacher?')) {
+                schoolData.teachers.splice(index, 1);
+                saveData();
+                renderTeachersList();
+            }
+        }
+
+        // Student Management
+        async function handleStudentImageUpload(input) {
+            if (!input.files || !input.files[0]) return;
+
+            const file = input.files[0];
+            const progressBar = document.getElementById('studentProgressBar');
+            const progressContainer = document.getElementById('studentProgress');
+            const preview = document.getElementById('studentImagePreview');
+
+            progressContainer.classList.add('show');
+            progressBar.style.width = '50%';
+
+            try {
+                const url = await uploadToCloudinary(file);
+                currentStudentImage = url;
+                preview.src = url;
+                preview.classList.add('show');
+                progressBar.style.width = '100%';
+
+                setTimeout(() => {
+                    progressContainer.classList.remove('show');
+                    progressBar.style.width = '0%';
+                }, 1000);
+            } catch (error) {
+                showAlert('error', 'Failed to upload image. Please try again.');
+                progressContainer.classList.remove('show');
+            }
+        }
+
+        function addStudent() {
+            const name = document.getElementById('studentName').value.trim();
+            const cls = document.getElementById('studentClass').value.trim();
+            const info = document.getElementById('studentInfo').value.trim();
+
+            if (!name || !cls) {
+                showAlert('error', 'Name and class are required.');
+                return;
+            }
+
+            const student = {
+                name: name,
+                class: cls,
+                info: info,
+                image: currentStudentImage
+            };
+
+            if (editingStudentIndex >= 0) {
+                schoolData.students[editingStudentIndex] = student;
+                editingStudentIndex = -1;
+            } else {
+                if (!schoolData.students) schoolData.students = [];
+                schoolData.students.push(student);
+            }
+
+            // Reset form
+            document.getElementById('studentName').value = '';
+            document.getElementById('studentClass').value = '';
+            document.getElementById('studentInfo').value = '';
+            document.getElementById('studentImagePreview').classList.remove('show');
+            document.getElementById('studentImagePreview').src = '';
+            currentStudentImage = '';
+
+            saveData();
+            renderStudentsList();
+        }
+
+        function renderStudentsList() {
+            const container = document.getElementById('studentsList');
+            if (!schoolData.students || schoolData.students.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-user-graduate"></i>
+                        <p>No students added yet.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = schoolData.students.map((s, i) => `
+                <div class="list-item">
+                    <img src="${s.image || 'data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'60\' height=\'60\'><rect width=\'60\' height=\'60\' fill=\'%230B3D2E\'/></svg>'}" alt="${s.name}">
+                    <div class="list-info">
+                        <h4>${s.name}</h4>
+                        <p>${s.class}${s.info ? ' · ' + s.info : ''}</p>
+                    </div>
+                    <div class="list-actions">
+                        <button class="btn btn-info btn-sm" onclick="editStudent(${i})"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteStudent(${i})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editStudent(index) {
+            const s = schoolData.students[index];
+            document.getElementById('studentName').value = s.name;
+            document.getElementById('studentClass').value = s.class;
+            document.getElementById('studentInfo').value = s.info || '';
+            currentStudentImage = s.image;
+
+            if (s.image) {
+                document.getElementById('studentImagePreview').src = s.image;
+                document.getElementById('studentImagePreview').classList.add('show');
+            }
+
+            editingStudentIndex = index;
+            document.querySelector('[onclick="addStudent()"]').innerHTML = '<i class="fas fa-save"></i> Update Student';
+        }
+
+        function deleteStudent(index) {
+            if (confirm('Are you sure you want to delete this student?')) {
+                schoolData.students.splice(index, 1);
+                saveData();
+                renderStudentsList();
+            }
+        }
+
+        // Gallery Management
+        async function handleGalleryUpload(input) {
+            if (!input.files || input.files.length === 0) return;
+
+            const files = Array.from(input.files);
+            const progressBar = document.getElementById('galleryProgressBar');
+            const progressContainer = document.getElementById('galleryProgress');
+
+            progressContainer.classList.add('show');
+
+            for (let i = 0; i < files.length; i++) {
+                progressBar.style.width = `${((i + 0.5) / files.length) * 100}%`;
+
+                try {
+                    const url = await uploadToCloudinary(files[i]);
+                    if (!schoolData.galleryImages) schoolData.galleryImages = [];
+                    schoolData.galleryImages.push(url);
+                } catch (error) {
+                    console.error('Failed to upload image:', error);
+                }
+            }
+
+            progressBar.style.width = '100%';
+            saveData();
+            renderGalleryList();
+
+            setTimeout(() => {
+                progressContainer.classList.remove('show');
+                progressBar.style.width = '0%';
+                input.value = '';
+            }, 1000);
+        }
+
+        function renderGalleryList() {
+            const container = document.getElementById('galleryList');
+            let html = '';
+
+            if (schoolData.galleryImages && schoolData.galleryImages.length > 0) {
+                html += schoolData.galleryImages.map((img, i) => `
+                    <div class="gallery-thumb">
+                        <img src="${img}" alt="Gallery ${i + 1}">
+                        <button class="remove" onclick="deleteGalleryImage(${i})"><i class="fas fa-times"></i></button>
+                    </div>
+                `).join('');
+            }
+
+            html += `
+                <div class="add-image" onclick="document.getElementById('galleryInput').click()">
+                    <i class="fas fa-plus"></i>
+                    <span>Add Images</span>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function deleteGalleryImage(index) {
+            if (confirm('Are you sure you want to delete this image?')) {
+                schoolData.galleryImages.splice(index, 1);
+                saveData();
+                renderGalleryList();
+            }
+        }
+
+        // Tab Switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
+
+        // Preview
+        function previewSite() {
+            const previewSection = document.getElementById('previewSection');
+            const previewFrame = document.getElementById('previewFrame');
+
+            if (previewSection.style.display === 'none') {
+                previewSection.style.display = 'block';
+                previewFrame.src = 'index.html?t=' + new Date().getTime();
+                window.scrollTo(0, document.body.scrollHeight);
+            } else {
+                previewSection.style.display = 'none';
+            }
+        }
+
+        // Alert System
+        function showAlert(type, message) {
+            const alertId = type === 'success' ? 'alertSuccess' : 'alertError';
+            const msgId = type === 'success' ? 'successMsg' : 'errorMsg';
+            const alertEl = document.getElementById(alertId);
+
+            document.getElementById(msgId).textContent = message;
+            alertEl.classList.add('show');
+
+            setTimeout(() => {
+                alertEl.classList.remove('show');
+            }, 4000);
+        }
+
+        // Modal
+        function closeModal() {
+            document.getElementById('editModal').classList.remove('active');
+        }
+
+        // Close modal on overlay click
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+    </script>
+</body>
+</html>
